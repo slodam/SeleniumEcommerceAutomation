@@ -38,6 +38,7 @@ public class CartPage {
 		
 		wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)).click();
 		
+		
 }
 	
 	public String getCheckoutPageTitle() {
@@ -46,6 +47,8 @@ public class CartPage {
 		return wait.until(driver -> {
 			try {
 				String heading = driver.findElement(checkoutPageTitle).getText();
+	            
+								
 				if(heading.equals("Checkout: Your Information")) {
 					return heading;
 				}

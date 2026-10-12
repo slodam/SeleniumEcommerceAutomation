@@ -1,6 +1,5 @@
 package com.ecommerce.tests;
 
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -22,10 +21,7 @@ public class LoginTest extends BaseTest {
 		  loginPage.enterPassword("secret_sauce");
 		  loginPage.clickLogin();
 		  
-//		  System.out.println("Username Entered");
-//		  System.out.println("Current URL: " + driver.getCurrentUrl());
-//		  System.out.println("Page Title: " + driver.getTitle());
-//	      // Verify Title
+//		  // Verify Title
 	      String PageTitle = driver.getTitle();
 	      Assert.assertEquals(PageTitle, "Swag Labs");
 		  
@@ -49,11 +45,6 @@ public class LoginTest extends BaseTest {
 	      checkoutpage.enterCheckoutDetails("Surabhi", "Lodam", "411057");
 	      checkoutpage.clickContinue();
 	      Assert.assertEquals(checkoutpage.getCheckoutOverviewTitle(), "Checkout: Overview");
-	      //System.out.println("URL after Continue: " + driver.getCurrentUrl());
-//	      System.out.println("Page source contains Overview: "
-//	              + driver.getPageSource().contains("Checkout: Overview"));
-//	      
-	      
 	      Assert.assertEquals(checkoutpage.getOverviewProductName(), "Sauce Labs Backpack");
 	      
 	      checkoutpage.clickFinish();
@@ -82,14 +73,7 @@ public class LoginTest extends BaseTest {
 		  
 		  CheckoutPage checkoutpage = new CheckoutPage(driver);
 		  checkoutpage.enterCheckoutDetails("", "Lodam", "411057");
-		  
-		  System.out.println("URL before Continue: " + driver.getCurrentUrl());
-		  System.out.println("First name field value: " + driver.findElement(By.id("first-name")).getAttribute("value"));
-		  
 		  checkoutpage.clickContinue();
-		  
-		  System.out.println("URL after Continue: " + driver.getCurrentUrl());
-		  System.out.println("Error element exist: " + !driver.findElements(By.cssSelector("[data-test='error']")).isEmpty());
 		  
 		  Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), "Error: First Name is required");
 	  }

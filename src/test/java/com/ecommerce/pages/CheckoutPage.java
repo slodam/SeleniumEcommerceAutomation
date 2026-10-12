@@ -35,18 +35,7 @@ public class CheckoutPage {
 	
 	public void clickContinue() {
 		driver.findElement(continueButton).click();
-
-//		System.out.println("URL after continue: " + driver.getCurrentUrl());
-//		
-//		System.out.println("Error element count: " +
-//		            driver.findElements(checkoutErrorMessage).size());
-//		
-//		System.out.println("Error text: " +
-//		        driver.findElements(checkoutErrorMessage).stream()
-//		                .map(element -> element.getText())
-//		                .toList());
-	}
-
+}
 	
 
 	public String getCheckoutOverviewTitle() {
