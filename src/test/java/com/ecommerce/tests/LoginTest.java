@@ -1,0 +1,145 @@
+package com.ecommerce.tests;
+
+import org.openqa.selenium.By;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import com.ecommerce.pages.CartPage;
+import com.ecommerce.pages.CheckoutPage;
+import com.ecommerce.pages.LoginPage;
+import com.ecommerce.pages.ProductsPage;
+
+public class LoginTest extends BaseTest {
+	
+	  @Test
+	    public void verifyLogin() {
+		  
+		  // Create LoginPage object
+		  LoginPage loginPage = new LoginPage(driver);
+		  	  
+		  // Perform login
+		  loginPage.enterUserName("standard_user");
+		  loginPage.enterPassword("secret_sauce");
+		  loginPage.clickLogin();
+		  
+//		  System.out.println("Username Entered");
+//		  System.out.println("Current URL: " + driver.getCurrentUrl());
+//		  System.out.println("Page Title: " + driver.getTitle());
+//	      // Verify Title
+	      String PageTitle = driver.getTitle();
+	      Assert.assertEquals(PageTitle, "Swag Labs");
+		  
+	      
+	      // Create ProductsPage object
+	      ProductsPage productspage = new ProductsPage(driver);
+
+	      // Verify Products page
+	      Assert.assertEquals(productspage.getProductTitle(), "Products");
+	      
+	      productspage.addBackPackToCart();
+	      productspage.clickCart();
+	      
+	      CartPage cartpage = new CartPage(driver);
+	      //System.out.println("Product in cart: " + cartpage.getProductName());
+	      Assert.assertEquals(cartpage.getProductName(), "Sauce Labs Backpack");
+	      cartpage.clickCheckout();
+	      Assert.assertEquals(cartpage.getCheckoutPageTitle(), "Checkout: Your Information");
+	      
+	      CheckoutPage checkoutpage = new CheckoutPage(driver);
+	      checkoutpage.enterCheckoutDetails("Surabhi", "Lodam", "411057");
+	      checkoutpage.clickContinue();
+	      Assert.assertEquals(checkoutpage.getCheckoutOverviewTitle(), "Checkout: Overview");
+	      //System.out.println("URL after Continue: " + driver.getCurrentUrl());
+//	      System.out.println("Page source contains Overview: "
+//	              + driver.getPageSource().contains("Checkout: Overview"));
+//	      
+	      
+	      Assert.assertEquals(checkoutpage.getOverviewProductName(), "Sauce Labs Backpack");
+	      
+	      checkoutpage.clickFinish();
+	      Assert.assertEquals(checkoutpage.getConfirmationMessage(), "Thank you for your order!");
+	    }// end of verifyLogin()
+	  
+	  
+	  @Test
+	  public void verifyFirstNameRequiredError() {
+		  
+		  LoginPage loginpage = new LoginPage(driver);
+		  loginpage.enterUserName("standard_user");
+		  loginpage.enterPassword("secret_sauce");
+		  loginpage.clickLogin();
+		  
+		  ProductsPage productspage = new ProductsPage(driver);
+		  productspage.addBackPackToCart();
+		  productspage.clickCart();
+		  
+		  System.out.println("URL before checkout: " + driver.getCurrentUrl());
+		  System.out.println("Page title before checkout: " + driver.getTitle());
+		  
+		  CartPage cartpage = new CartPage(driver);
+		  cartpage.clickCheckout();
+		  Assert.assertEquals(cartpage.getCheckoutPageTitle(), "Checkout: Your Information");
+		  
+		  CheckoutPage checkoutpage = new CheckoutPage(driver);
+		  checkoutpage.enterCheckoutDetails("", "Lodam", "411057");
+		  
+		  System.out.println("URL before Continue: " + driver.getCurrentUrl());
+		  System.out.println("First name field value: " + driver.findElement(By.id("first-name")).getAttribute("value"));
+		  
+		  checkoutpage.clickContinue();
+		  
+		  System.out.println("URL after Continue: " + driver.getCurrentUrl());
+		  System.out.println("Error element exist: " + !driver.findElements(By.cssSelector("[data-test='error']")).isEmpty());
+		  
+		  Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), "Error: First Name is required");
+	  }
+	  
+	  @Test
+	  public void verifyLastNameRequiredError() {
+		  
+		  LoginPage loginpage = new LoginPage(driver);
+		  loginpage.enterUserName("standard_user");
+		  loginpage.enterPassword("secret_sauce");
+		  loginpage.clickLogin();
+		  
+		  ProductsPage productspage = new ProductsPage(driver);
+		  productspage.addBackPackToCart();
+		  productspage.clickCart();
+		  
+		  CartPage cartpage = new CartPage(driver);
+		  cartpage.clickCheckout();
+		  Assert.assertEquals(cartpage.getCheckoutPageTitle(), "Checkout: Your Information");
+		  
+		  CheckoutPage checkoutpage = new CheckoutPage(driver);
+		  checkoutpage.enterCheckoutDetails("Surabhi","", "411057");
+		  checkoutpage.clickContinue();
+		  
+		  Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), "Error: Last Name is required");
+	  }
+	  
+	  @Test
+	  public void verifyPostalCodeRequiredError() {
+		  
+		  LoginPage loginpage = new LoginPage(driver);
+		  loginpage.enterUserName("standard_user");
+		  loginpage.enterPassword("secret_sauce");
+		  loginpage.clickLogin();
+		  
+		  ProductsPage productspage = new ProductsPage(driver);
+		  productspage.addBackPackToCart();
+		  productspage.clickCart();
+		  
+		  CartPage cartpage = new CartPage(driver);
+		  cartpage.clickCheckout();
+		  Assert.assertEquals(cartpage.getCheckoutPageTitle(), "Checkout: Your Information");
+		  
+		  CheckoutPage checkoutpage = new CheckoutPage(driver);
+		  checkoutpage.enterCheckoutDetails("Surabhi", "Lodam", "");
+		  checkoutpage.clickContinue();
+		  
+		  Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), "Error: Postal Code is required");
+		  
+		  
+	  }
+	  
+}
