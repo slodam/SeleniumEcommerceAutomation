@@ -1,13 +1,16 @@
 package com.ecommerce.tests;
-
+import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
 import com.ecommerce.pages.CartPage;
 import com.ecommerce.pages.CheckoutPage;
 import com.ecommerce.pages.LoginPage;
 import com.ecommerce.pages.ProductsPage;
+import com.ecommerce.utils.LoggerUtils;
 
+@Listeners(ExtentReportListener.class)
 public class LoginTest extends BaseTest {
 	
 	  @Test
@@ -44,6 +47,11 @@ public class LoginTest extends BaseTest {
 	      CheckoutPage checkoutpage = new CheckoutPage(driver);
 	      checkoutpage.enterCheckoutDetails("Surabhi", "Lodam", "411057");
 	      checkoutpage.clickContinue();
+	      System.out.println("URL after Continue: " + driver.getCurrentUrl());
+	      
+	      System.out.println("Page source contains error: "
+	    	        + driver.getPageSource().contains("Error:"));
+	      
 	      Assert.assertEquals(checkoutpage.getCheckoutOverviewTitle(), "Checkout: Overview");
 	      Assert.assertEquals(checkoutpage.getOverviewProductName(), "Sauce Labs Backpack");
 	      
@@ -52,78 +60,48 @@ public class LoginTest extends BaseTest {
 	    }// end of verifyLogin()
 	  
 	  
-	  @Test
-	  public void verifyFirstNameRequiredError() {
-		  
-		  LoginPage loginpage = new LoginPage(driver);
-		  loginpage.enterUserName("standard_user");
-		  loginpage.enterPassword("secret_sauce");
-		  loginpage.clickLogin();
-		  
-		  ProductsPage productspage = new ProductsPage(driver);
-		  productspage.addBackPackToCart();
-		  productspage.clickCart();
-		  
-		  System.out.println("URL before checkout: " + driver.getCurrentUrl());
-		  System.out.println("Page title before checkout: " + driver.getTitle());
-		  
-		  CartPage cartpage = new CartPage(driver);
-		  cartpage.clickCheckout();
-		  Assert.assertEquals(cartpage.getCheckoutPageTitle(), "Checkout: Your Information");
-		  
-		  CheckoutPage checkoutpage = new CheckoutPage(driver);
-		  checkoutpage.enterCheckoutDetails("", "Lodam", "411057");
-		  checkoutpage.clickContinue();
-		  
-		  Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), "Error: First Name is required");
-	  }
+//	 
+	  @DataProvider(name = "checkoutValidationData")
+	  public Object[][] checkoutValidationData(){
+		  return new Object[][] {
+			  {"","Lodam","411057","Error: First Name is required"},
+			  {"Surabhi", "", "411057", "Error: Last Name is required"},
+			  {"Surabhi", "Lodam", "", "Error: Postal Code is required"}
+		  };
+	 }
 	  
-	  @Test
-	  public void verifyLastNameRequiredError() {
-		  
-		  LoginPage loginpage = new LoginPage(driver);
-		  loginpage.enterUserName("standard_user");
-		  loginpage.enterPassword("secret_sauce");
-		  loginpage.clickLogin();
-		  
-		  ProductsPage productspage = new ProductsPage(driver);
-		  productspage.addBackPackToCart();
-		  productspage.clickCart();
-		  
-		  CartPage cartpage = new CartPage(driver);
-		  cartpage.clickCheckout();
-		  Assert.assertEquals(cartpage.getCheckoutPageTitle(), "Checkout: Your Information");
-		  
-		  CheckoutPage checkoutpage = new CheckoutPage(driver);
-		  checkoutpage.enterCheckoutDetails("Surabhi","", "411057");
-		  checkoutpage.clickContinue();
-		  
-		  Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), "Error: Last Name is required");
-	  }
-	  
-	  @Test
-	  public void verifyPostalCodeRequiredError() {
-		  
-		  LoginPage loginpage = new LoginPage(driver);
-		  loginpage.enterUserName("standard_user");
-		  loginpage.enterPassword("secret_sauce");
-		  loginpage.clickLogin();
-		  
-		  ProductsPage productspage = new ProductsPage(driver);
-		  productspage.addBackPackToCart();
-		  productspage.clickCart();
-		  
-		  CartPage cartpage = new CartPage(driver);
-		  cartpage.clickCheckout();
-		  Assert.assertEquals(cartpage.getCheckoutPageTitle(), "Checkout: Your Information");
-		  
-		  CheckoutPage checkoutpage = new CheckoutPage(driver);
-		  checkoutpage.enterCheckoutDetails("Surabhi", "Lodam", "");
-		  checkoutpage.clickContinue();
-		  
-		  Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), "Error: Postal Code is required");
-		  
-		  
-	  }
-	  
+	 @Test(dataProvider = "checkoutValidationData")
+	 public void verifyCheckoutValidation(String firstName,
+			 							  String lastName,
+			 							  String postalCode,
+			 							  String expectedError) {
+		 
+		 LoginPage loginpage = new LoginPage(driver);
+		 loginpage.enterUserName("standard_user");
+		 loginpage.enterPassword("secret_sauce");
+		 loginpage.clickLogin();
+		 
+		 ProductsPage productspage = new ProductsPage(driver);
+		 productspage.addBackPackToCart();
+		 productspage.clickCart();
+		 
+		 CartPage cartpage = new CartPage(driver);
+		 cartpage.clickCheckout();
+		 
+		 CheckoutPage checkoutpage = new CheckoutPage(driver);
+		 checkoutpage.enterCheckoutDetails(firstName, lastName, postalCode);
+		 checkoutpage.clickContinue();
+		 
+//		 System.out.println("URL after Continue: " + driver.getCurrentUrl());
+//		 System.out.println("Page title: " + driver.getTitle());
+//		 System.out.println("Error elements found: " +
+//		         driver.findElements(By.cssSelector("[data-test='error']")).size());
+//		 System.out.println("Page contains checkout error: " +
+//		         driver.getPageSource().contains("Error:"));
+		 
+		 Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), expectedError);
+		 
+	 }
+	 
+	
 }
