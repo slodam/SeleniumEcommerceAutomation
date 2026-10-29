@@ -90,6 +90,14 @@ public class LoginTest extends BaseTest {
 		 
 		 CheckoutPage checkoutpage = new CheckoutPage(driver);
 		 checkoutpage.enterCheckoutDetails(firstName, lastName, postalCode);
+		 
+//		 System.out.println("First name entered: "
+//			        + driver.findElement(By.id("first-name")).getAttribute("value"));
+//			System.out.println("Last name entered: "
+//			        + driver.findElement(By.id("last-name")).getAttribute("value"));
+//			System.out.println("Postal code entered: "
+//			        + driver.findElement(By.id("postal-code")).getAttribute("value"));
+//			
 		 checkoutpage.clickContinue();
 		 
 //		 System.out.println("URL after Continue: " + driver.getCurrentUrl());
@@ -100,6 +108,20 @@ public class LoginTest extends BaseTest {
 //		         driver.getPageSource().contains("Error:"));
 		 
 		 Assert.assertEquals(checkoutpage.getCheckoutErrorMessage(), expectedError);
+		 
+//		 System.out.println("Expected error: " + expectedError);
+//
+//		 System.out.println("Actual error element count: "
+//		         + driver.findElements(By.cssSelector("[data-test='error']")).size());
+//
+//		 if (driver.findElements(By.cssSelector("[data-test='error']")).size() > 0) {
+//		     System.out.println("Actual error text: "
+//		             + driver.findElement(By.cssSelector("[data-test='error']")).getText());
+//		 }
+//
+//		 Assert.assertTrue(
+//		         driver.findElements(By.cssSelector("[data-test='error']")).size() > 0,
+//		         "Checkout validation error was not displayed for: " + expectedError);
 		 
 	 }
 	 

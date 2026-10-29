@@ -26,11 +26,33 @@ public class CheckoutPage {
 	private By confirmationMessage = By.className("complete-header");
 	private By checkoutErrorMessage = By.cssSelector("[data-test='error']");
 	
-	public void enterCheckoutDetails(String firstName, String lastName, String postalCode) {
-		
-		driver.findElement(firstNameField).sendKeys(firstName);
-		driver.findElement(lastNameField).sendKeys(lastName);
-		driver.findElement(postalCodeField).sendKeys(postalCode);
+//	public void enterCheckoutDetails(String firstName, String lastName, String postalCode) {
+//		
+//		driver.findElement(firstNameField).sendKeys(firstName);
+//		driver.findElement(lastNameField).sendKeys(lastName);
+//		driver.findElement(postalCodeField).sendKeys(postalCode);
+//	}
+	
+	public void enterCheckoutDetails(
+	        String firstName, String lastName, String postalCode) {
+
+	    driver.findElement(firstNameField).clear();
+	    driver.findElement(firstNameField).sendKeys(firstName);
+
+	    driver.findElement(lastNameField).clear();
+	    driver.findElement(lastNameField).sendKeys(lastName);
+
+	    driver.findElement(postalCodeField).clear();
+	    driver.findElement(postalCodeField).sendKeys(postalCode);
+
+//	    System.out.println("First name value: "
+//	            + driver.findElement(firstNameField).getAttribute("value"));
+//
+//	    System.out.println("Last name value: "
+//	            + driver.findElement(lastNameField).getAttribute("value"));
+//
+//	    System.out.println("Postal code value: "
+//	            + driver.findElement(postalCodeField).getAttribute("value"));
 	}
 	
 	public void clickContinue() {
